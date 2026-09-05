@@ -175,7 +175,7 @@ loader.load(
 
         model.rotation.x = -0.15;
 
-        model.rotation.y = 0.4;
+        model.rotation.y = -0.8;
 
 
         scene.add(model);
