@@ -6,43 +6,25 @@ import { STLLoader } from "three/addons/loaders/STLLoader.js";
    SETTINGS
 ===================================================== */
 
-/*
-    MODEL ORIENTATION
-
-    These are the ONLY numbers you need to change
-    when you want to change the model's orientation.
-
-    X = tilt forward/backward
-    Y = turn left/right
-    Z = rotate clockwise/counter-clockwise on screen
-*/
-
-const modelRotationX = -0.15;
-const modelRotationY = 0;
-const modelRotationZ = Math.PI / 2;
+// Rotate the actual STL model once when loading.
+// This does NOT affect the animation axes.
+const modelCorrectionX = -Math.PI / 2;
 
 
-/*
-    MODEL SIZE
-
-    Increase this number to make the model smaller.
-    Decrease it to make the model larger.
-*/
-
+// Size of the model
 const modelSize = 2.3;
 
 
-/*
-    MODEL POSITION
-
-    X = left/right
-    Y = up/down
-    Z = closer/further from camera
-*/
-
+// Initial position
 const modelPositionX = 0;
 const modelPositionY = 0;
 const modelPositionZ = 0;
+
+
+// Normal animation starting orientation
+const modelRotationX = -0.15;
+const modelRotationY = 0;
+const modelRotationZ = 0;
 
 
 /* =====================================================
@@ -56,13 +38,14 @@ const container =
 const scene = new THREE.Scene();
 
 
-const camera = new THREE.PerspectiveCamera(
-    35,
-    container.clientWidth /
+const camera =
+    new THREE.PerspectiveCamera(
+        35,
+        container.clientWidth /
         container.clientHeight,
-    0.1,
-    100
-);
+        0.1,
+        100
+    );
 
 
 camera.position.set(
@@ -84,10 +67,7 @@ const renderer =
 
 
 renderer.setPixelRatio(
-    Math.min(
-        window.devicePixelRatio,
-        2
-    )
+    Math.min(window.devicePixelRatio, 2)
 );
 
 
@@ -115,10 +95,7 @@ const ambientLight =
         2
     );
 
-
-scene.add(
-    ambientLight
-);
+scene.add(ambientLight);
 
 
 const keyLight =
@@ -127,17 +104,13 @@ const keyLight =
         4
     );
 
-
 keyLight.position.set(
     3,
     4,
     5
 );
 
-
-scene.add(
-    keyLight
-);
+scene.add(keyLight);
 
 
 const fillLight =
@@ -146,21 +119,17 @@ const fillLight =
         2
     );
 
-
 fillLight.position.set(
     -4,
     1,
     2
 );
 
-
-scene.add(
-    fillLight
-);
+scene.add(fillLight);
 
 
 /* =====================================================
-   LOAD STL MODEL
+   LOAD STL
 ===================================================== */
 
 const loader =
@@ -175,6 +144,21 @@ loader.load(
     "models/watchmate_model.stl",
 
     (geometry) => {
+
+        /* ---------------------------------------------
+           MODEL CORRECTION
+
+           This rotates the actual STL geometry.
+
+           It happens ONCE.
+
+           The animation does not know about this
+           rotation, so cursor interaction remains
+           consistent.
+        --------------------------------------------- */
+
+        geometry.rotateX(modelCorrectionX);
+
 
         /* ---------------------------------------------
            NORMALS
@@ -225,9 +209,7 @@ loader.load(
             new THREE.Vector3();
 
 
-        box.getCenter(
-            center
-        );
+        box.getCenter(center);
 
 
         geometry.translate(
@@ -238,16 +220,14 @@ loader.load(
 
 
         /* ---------------------------------------------
-           SCALE MODEL
+           SCALE
         --------------------------------------------- */
 
         const size =
             new THREE.Vector3();
 
 
-        box.getSize(
-            size
-        );
+        box.getSize(size);
 
 
         const maxDimension =
@@ -269,23 +249,25 @@ loader.load(
 
 
         /* ---------------------------------------------
-           INITIAL ORIENTATION
+           NORMAL MODEL ROTATION
+
+           Notice that there is NO correction here.
+
+           The geometry has already been rotated above.
         --------------------------------------------- */
 
         model.rotation.x =
             modelRotationX;
 
-
         model.rotation.y =
             modelRotationY;
-
 
         model.rotation.z =
             modelRotationZ;
 
 
         /* ---------------------------------------------
-           INITIAL POSITION
+           POSITION
         --------------------------------------------- */
 
         model.position.set(
@@ -299,9 +281,7 @@ loader.load(
            ADD TO SCENE
         --------------------------------------------- */
 
-        scene.add(
-            model
-        );
+        scene.add(model);
 
 
         console.log(
@@ -337,40 +317,31 @@ let targetX = 0;
 let targetY = 0;
 
 
-/* =====================================================
-   DESKTOP MOUSE
-===================================================== */
-
 window.addEventListener(
     "mousemove",
     (event) => {
 
         mouseX =
             (event.clientX /
-                window.innerWidth) -
-            0.5;
-
+            window.innerWidth) - 0.5;
 
         mouseY =
             (event.clientY /
-                window.innerHeight) -
-            0.5;
+            window.innerHeight) - 0.5;
 
     }
 );
 
 
 /* =====================================================
-   MOBILE TOUCH
+   TOUCH
 ===================================================== */
 
 window.addEventListener(
     "touchmove",
     (event) => {
 
-        if (
-            !event.touches.length
-        ) {
+        if (!event.touches.length) {
             return;
         }
 
@@ -381,17 +352,14 @@ window.addEventListener(
 
         mouseX =
             (touch.clientX /
-                window.innerWidth) -
-            0.5;
+            window.innerWidth) - 0.5;
 
 
         mouseY =
             (touch.clientY /
-                window.innerHeight) -
-            0.5;
+            window.innerHeight) - 0.5;
 
     },
-
     {
         passive: true
     }
@@ -408,9 +376,7 @@ const clock =
 
 function animate() {
 
-    requestAnimationFrame(
-        animate
-    );
+    requestAnimationFrame(animate);
 
 
     const elapsed =
@@ -422,26 +388,27 @@ function animate() {
     --------------------------------------------- */
 
     targetX +=
-        (mouseX - targetX) *
-        0.04;
+        (mouseX - targetX) * 0.04;
 
 
     targetY +=
-        (mouseY - targetY) *
-        0.04;
+        (mouseY - targetY) * 0.04;
 
 
     /* ---------------------------------------------
-       MODEL ANIMATION
+       MODEL
     --------------------------------------------- */
 
     if (model) {
 
         /*
-            Cursor influence.
+            Cursor interaction.
 
-            These values are intentionally small
-            to keep the interaction subtle.
+            These rotations operate on the MODEL'S
+            normal coordinate system.
+
+            The STL correction above does not alter
+            these values.
         */
 
         const cursorRotationY =
@@ -451,10 +418,6 @@ function animate() {
         const cursorRotationX =
             targetY * 0.20;
 
-
-        /*
-            Apply orientation + cursor movement.
-        */
 
         model.rotation.x =
             modelRotationX +
@@ -466,17 +429,13 @@ function animate() {
             cursorRotationY;
 
 
-        /*
-            Keep the Z orientation fixed.
-        */
-
         model.rotation.z =
             modelRotationZ;
 
 
-        /*
-            Gentle floating movement.
-        */
+        /* -----------------------------------------
+           FLOATING
+        ----------------------------------------- */
 
         model.position.y =
             modelPositionY +
@@ -510,7 +469,6 @@ function resize() {
 
     const width =
         container.clientWidth;
-
 
     const height =
         container.clientHeight;
@@ -561,9 +519,7 @@ const observer =
 
                         entry.target
                             .classList
-                            .add(
-                                "visible"
-                            );
+                            .add("visible");
 
 
                         observer.unobserve(
