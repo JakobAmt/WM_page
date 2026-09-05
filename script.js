@@ -8,7 +8,7 @@ import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 // Rotate the actual STL model once when loading.
 // This does NOT affect the animation axes.
-const modelCorrectionX = -Math.PI / 2.5;
+const modelCorrectionX = -3.1415 / 2.5;
 
 
 // Size of the model
