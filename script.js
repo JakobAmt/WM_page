@@ -8,7 +8,7 @@ import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 // Rotate the actual STL model once when loading.
 // This does NOT affect the animation axes.
-const modelCorrectionX = -Math.PI / 2.5;
+const modelCorrectionX = -Math.PI / 2.2;
 
 
 // Size of the model
@@ -178,7 +178,7 @@ loader.load(
 
                 roughness: 0.38,
 
-                metalness: 0.05
+                metalness: 0.1
 
             });
 
@@ -395,55 +395,65 @@ function animate() {
         (mouseY - targetY) * 0.04;
 
 
-    /* ---------------------------------------------
-       MODEL
-    --------------------------------------------- */
+   /* ---------------------------------------------
+   MODEL
+--------------------------------------------- */
 
-    if (model) {
+if (model) {
 
-        /*
-            Cursor interaction.
+    /*
+        Cursor interaction
+    */
 
-            These rotations operate on the MODEL'S
-            normal coordinate system.
+    const cursorRotationY =
+        targetX * 0.35;
 
-            The STL correction above does not alter
-            these values.
-        */
-
-        const cursorRotationY =
-            targetX * 0.35;
+    const cursorRotationX =
+        targetY * 0.20;
 
 
-        const cursorRotationX =
-            targetY * 0.20;
+    /*
+        Slow continuous rotation
+
+        0.08 = subtle
+        0.15 = faster
+    */
+
+    const slowRotation =
+        elapsed * 0.08;
 
 
-        model.rotation.x =
-            modelRotationX +
-            cursorRotationX;
+    /*
+        Combine:
+        - starting orientation
+        - slow rotation
+        - cursor interaction
+    */
+
+    model.rotation.x =
+        modelRotationX +
+        cursorRotationX;
+
+    model.rotation.y =
+        modelRotationY +
+        slowRotation +
+        cursorRotationY;
+
+    model.rotation.z =
+        modelRotationZ;
 
 
-        model.rotation.y =
-            modelRotationY +
-            cursorRotationY;
+    /*
+        Gentle floating
+    */
 
+    model.position.y =
+        modelPositionY +
+        Math.sin(
+            elapsed * 1.2
+        ) * 0.08;
 
-        model.rotation.z =
-            modelRotationZ;
-
-
-        /* -----------------------------------------
-           FLOATING
-        ----------------------------------------- */
-
-        model.position.y =
-            modelPositionY +
-            Math.sin(
-                elapsed * 1.2
-            ) * 0.08;
-
-    }
+}
 
 
     /* ---------------------------------------------
