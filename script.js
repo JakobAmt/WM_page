@@ -3,95 +3,171 @@ import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 
 /* =====================================================
+   SETTINGS
+===================================================== */
+
+/*
+    MODEL ORIENTATION
+
+    These are the ONLY numbers you need to change
+    when you want to change the model's orientation.
+
+    X = tilt forward/backward
+    Y = turn left/right
+    Z = rotate clockwise/counter-clockwise on screen
+*/
+
+const modelRotationX = -0.15;
+const modelRotationY = 0;
+const modelRotationZ = Math.PI / 2;
+
+
+/*
+    MODEL SIZE
+
+    Increase this number to make the model smaller.
+    Decrease it to make the model larger.
+*/
+
+const modelSize = 2.3;
+
+
+/*
+    MODEL POSITION
+
+    X = left/right
+    Y = up/down
+    Z = closer/further from camera
+*/
+
+const modelPositionX = 0;
+const modelPositionY = 0;
+const modelPositionZ = 0;
+
+
+/* =====================================================
    THREE.JS SETUP
 ===================================================== */
 
-const container = document.getElementById("three-container");
+const container =
+    document.getElementById("three-container");
+
 
 const scene = new THREE.Scene();
 
+
 const camera = new THREE.PerspectiveCamera(
     35,
-    container.clientWidth / container.clientHeight,
+    container.clientWidth /
+        container.clientHeight,
     0.1,
     100
 );
 
-camera.position.set(0, 0, 5);
+
+camera.position.set(
+    0,
+    0,
+    5
+);
 
 
 /* =====================================================
    RENDERER
 ===================================================== */
 
-const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: true
-});
+const renderer =
+    new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true
+    });
+
 
 renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
 );
+
 
 renderer.setSize(
     container.clientWidth,
     container.clientHeight
 );
 
+
 renderer.shadowMap.enabled = true;
 
-container.appendChild(renderer.domElement);
+
+container.appendChild(
+    renderer.domElement
+);
 
 
 /* =====================================================
    LIGHTING
 ===================================================== */
 
-const ambientLight = new THREE.AmbientLight(
-    0xffffff,
+const ambientLight =
+    new THREE.AmbientLight(
+        0xffffff,
+        2
+    );
+
+
+scene.add(
+    ambientLight
+);
+
+
+const keyLight =
+    new THREE.DirectionalLight(
+        0xffffff,
+        4
+    );
+
+
+keyLight.position.set(
+    3,
+    4,
+    5
+);
+
+
+scene.add(
+    keyLight
+);
+
+
+const fillLight =
+    new THREE.DirectionalLight(
+        0xffffff,
+        2
+    );
+
+
+fillLight.position.set(
+    -4,
+    1,
     2
 );
 
-scene.add(ambientLight);
 
-
-const keyLight = new THREE.DirectionalLight(
-    0xffffff,
-    4
+scene.add(
+    fillLight
 );
-
-keyLight.position.set(3, 4, 5);
-
-scene.add(keyLight);
-
-
-const fillLight = new THREE.DirectionalLight(
-    0xffffff,
-    2
-);
-
-fillLight.position.set(-4, 1, 2);
-
-scene.add(fillLight);
 
 
 /* =====================================================
-   MODEL
+   LOAD STL MODEL
 ===================================================== */
 
-const loader = new STLLoader();
+const loader =
+    new STLLoader();
+
 
 let model = null;
-
-
-/*
-    Change this number to change the starting
-    horizontal orientation of the watch stand.
-
-    Negative = counter-clockwise
-    Positive = clockwise
-*/
-
 
 
 loader.load(
@@ -100,27 +176,38 @@ loader.load(
 
     (geometry) => {
 
+        /* ---------------------------------------------
+           NORMALS
+        --------------------------------------------- */
+
         geometry.computeVertexNormals();
+
 
         /* ---------------------------------------------
            MATERIAL
         --------------------------------------------- */
 
-        const material = new THREE.MeshStandardMaterial({
+        const material =
+            new THREE.MeshStandardMaterial({
 
-            color: 0xf4f0df,
+                color: 0xf4f0df,
 
-            roughness: 0.38,
+                roughness: 0.38,
 
-            metalness: 0.05
+                metalness: 0.05
 
-        });
+            });
 
 
-        model = new THREE.Mesh(
-            geometry,
-            material
-        );
+        /* ---------------------------------------------
+           CREATE MODEL
+        --------------------------------------------- */
+
+        model =
+            new THREE.Mesh(
+                geometry,
+                material
+            );
 
 
         /* ---------------------------------------------
@@ -129,11 +216,19 @@ loader.load(
 
         geometry.computeBoundingBox();
 
-        const box = geometry.boundingBox;
 
-        const center = new THREE.Vector3();
+        const box =
+            geometry.boundingBox;
 
-        box.getCenter(center);
+
+        const center =
+            new THREE.Vector3();
+
+
+        box.getCenter(
+            center
+        );
+
 
         geometry.translate(
             -center.x,
@@ -146,37 +241,72 @@ loader.load(
            SCALE MODEL
         --------------------------------------------- */
 
-        const size = new THREE.Vector3();
+        const size =
+            new THREE.Vector3();
 
-        box.getSize(size);
 
-        const maxDimension = Math.max(
-            size.x,
-            size.y,
-            size.z
+        box.getSize(
+            size
         );
 
-        const scale = 2.3 / maxDimension;
 
-        model.scale.setScalar(scale);
+        const maxDimension =
+            Math.max(
+                size.x,
+                size.y,
+                size.z
+            );
+
+
+        const scale =
+            modelSize /
+            maxDimension;
+
+
+        model.scale.setScalar(
+            scale
+        );
 
 
         /* ---------------------------------------------
-           INITIAL ROTATION
+           INITIAL ORIENTATION
         --------------------------------------------- */
 
-        model.rotation.x = 0;
+        model.rotation.x =
+            modelRotationX;
 
-        model.rotation.z = 0;
 
-        model.rotation.y = 0;
+        model.rotation.y =
+            modelRotationY;
+
+
+        model.rotation.z =
+            modelRotationZ;
 
 
         /* ---------------------------------------------
-           ADD MODEL
+           INITIAL POSITION
         --------------------------------------------- */
 
-        scene.add(model);
+        model.position.set(
+            modelPositionX,
+            modelPositionY,
+            modelPositionZ
+        );
+
+
+        /* ---------------------------------------------
+           ADD TO SCENE
+        --------------------------------------------- */
+
+        scene.add(
+            model
+        );
+
+
+        console.log(
+            "WatchMate model loaded."
+        );
 
     },
 
@@ -207,41 +337,61 @@ let targetX = 0;
 let targetY = 0;
 
 
-/* Desktop */
+/* =====================================================
+   DESKTOP MOUSE
+===================================================== */
 
 window.addEventListener(
     "mousemove",
     (event) => {
 
         mouseX =
-            (event.clientX / window.innerWidth) - 0.5;
+            (event.clientX /
+                window.innerWidth) -
+            0.5;
+
 
         mouseY =
-            (event.clientY / window.innerHeight) - 0.5;
+            (event.clientY /
+                window.innerHeight) -
+            0.5;
 
     }
 );
 
 
-/* Mobile */
+/* =====================================================
+   MOBILE TOUCH
+===================================================== */
 
 window.addEventListener(
     "touchmove",
     (event) => {
 
-        if (!event.touches.length) {
+        if (
+            !event.touches.length
+        ) {
             return;
         }
 
-        const touch = event.touches[0];
+
+        const touch =
+            event.touches[0];
+
 
         mouseX =
-            (touch.clientX / window.innerWidth) - 0.5;
+            (touch.clientX /
+                window.innerWidth) -
+            0.5;
+
 
         mouseY =
-            (touch.clientY / window.innerHeight) - 0.5;
+            (touch.clientY /
+                window.innerHeight) -
+            0.5;
 
     },
+
     {
         passive: true
     }
@@ -252,36 +402,100 @@ window.addEventListener(
    ANIMATION
 ===================================================== */
 
-const clock = new THREE.Clock();
+const clock =
+    new THREE.Clock();
 
 
 function animate() {
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(
+        animate
+    );
 
-    const elapsed = clock.getElapsedTime();
 
-    targetX += (mouseX - targetX) * 0.04;
-    targetY += (mouseY - targetY) * 0.04;
+    const elapsed =
+        clock.getElapsedTime();
+
+
+    /* ---------------------------------------------
+       SMOOTH CURSOR
+    --------------------------------------------- */
+
+    targetX +=
+        (mouseX - targetX) *
+        0.04;
+
+
+    targetY +=
+        (mouseY - targetY) *
+        0.04;
+
+
+    /* ---------------------------------------------
+       MODEL ANIMATION
+    --------------------------------------------- */
 
     if (model) {
 
-        const cursorRotationY = targetX * 0.35;
-        const cursorRotationX = targetY * 0.20;
+        /*
+            Cursor influence.
 
-        // Keep the model upright
-        model.rotation.z = -Math.PI / 2;
+            These values are intentionally small
+            to keep the interaction subtle.
+        */
 
-        // Subtle cursor interaction
-        model.rotation.y = cursorRotationY;
-        model.rotation.x = -0.15 + cursorRotationX;
+        const cursorRotationY =
+            targetX * 0.35;
 
-        // Gentle floating
+
+        const cursorRotationX =
+            targetY * 0.20;
+
+
+        /*
+            Apply orientation + cursor movement.
+        */
+
+        model.rotation.x =
+            modelRotationX +
+            cursorRotationX;
+
+
+        model.rotation.y =
+            modelRotationY +
+            cursorRotationY;
+
+
+        /*
+            Keep the Z orientation fixed.
+        */
+
+        model.rotation.z =
+            modelRotationZ;
+
+
+        /*
+            Gentle floating movement.
+        */
+
         model.position.y =
-            Math.sin(elapsed * 1.2) * 0.08;
+            modelPositionY +
+            Math.sin(
+                elapsed * 1.2
+            ) * 0.08;
+
     }
 
-    renderer.render(scene, camera);
+
+    /* ---------------------------------------------
+       RENDER
+    --------------------------------------------- */
+
+    renderer.render(
+        scene,
+        camera
+    );
+
 }
 
 
@@ -297,12 +511,14 @@ function resize() {
     const width =
         container.clientWidth;
 
+
     const height =
         container.clientHeight;
 
 
     camera.aspect =
         width / height;
+
 
     camera.updateProjectionMatrix();
 
@@ -326,7 +542,9 @@ window.addEventListener(
 ===================================================== */
 
 const revealElements =
-    document.querySelectorAll(".reveal");
+    document.querySelectorAll(
+        ".reveal"
+    );
 
 
 const observer =
@@ -343,7 +561,9 @@ const observer =
 
                         entry.target
                             .classList
-                            .add("visible");
+                            .add(
+                                "visible"
+                            );
 
 
                         observer.unobserve(
