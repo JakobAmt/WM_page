@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,25 +8,121 @@
     <title>WatchMate</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <!-- Three.js -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+        }
+    }
+    </script>
 </head>
 
 <body>
 
+    <!-- NAVIGATION -->
     <nav class="navbar">
-        <div class="logo">WatchMate</div>
+
+        <a href="#" class="logo">WATCHMATE</a>
 
         <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Products</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+            <a href="#about">ABOUT</a>
+            <a href="#contact">CONTACT</a>
         </div>
+
     </nav>
 
+
+    <!-- HERO -->
     <main>
-        <h1>WatchMate</h1>
-        <p>🚧 In progress 🚧</p>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="eyebrow">
+                    MADE FOR WATCH PEOPLE
+                </p>
+
+                <h1>
+                    WATCH<br>
+                    MATE
+                </h1>
+
+                <p class="hero-text">
+                    A little place for your watch to call home.
+                </p>
+
+                <a href="#contact" class="contact-button">
+                    GET IN TOUCH
+                </a>
+
+            </div>
+
+
+            <!-- THREE.JS MODEL -->
+            <div id="three-container"></div>
+
+        </section>
+
+
+        <!-- ABOUT -->
+        <section id="about" class="section reveal">
+
+            <p class="eyebrow">
+                ABOUT WATCHMATE
+            </p>
+
+            <h2>
+                WATCH STANDS<br>
+                WITH PERSONALITY.
+            </h2>
+
+            <p class="section-text">
+                WatchMate creates playful, practical and unique watch
+                stands designed to give your watch the attention it deserves.
+            </p>
+
+        </section>
+
+
+        <!-- CONTACT -->
+        <section id="contact" class="contact-section reveal">
+
+            <p class="eyebrow">
+                HAVE A QUESTION?
+            </p>
+
+            <h2>
+                LET'S TALK.
+            </h2>
+
+            <a
+                href="mailto:hello@watchmate.no"
+                class="contact-email">
+                hello@watchmate.no
+            </a>
+
+        </section>
+
     </main>
 
+
+    <!-- FOOTER -->
+    <footer>
+
+        <span>WATCHMATE</span>
+
+        <span>© 2026</span>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script type="module" src="script.js"></script>
+
 </body>
+
 </html>
