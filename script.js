@@ -92,7 +92,6 @@ let model = null;
     Positive = clockwise
 */
 
-const modelRotationOffset = -1.17;
 
 
 loader.load(
@@ -168,7 +167,9 @@ loader.load(
 
         model.rotation.x = -0.15;
 
-        model.rotation.y = modelRotationOffset;
+        model.rotation.z = Math.PI / 2;
+
+        model.rotation.y = 0;
 
 
         /* ---------------------------------------------
@@ -258,91 +259,29 @@ function animate() {
 
     requestAnimationFrame(animate);
 
+    const elapsed = clock.getElapsedTime();
 
-    const elapsed =
-        clock.getElapsedTime();
-
-
-    /* ---------------------------------------------
-       Smooth cursor movement
-    --------------------------------------------- */
-
-    targetX +=
-        (mouseX - targetX) * 0.04;
-
-    targetY +=
-        (mouseY - targetY) * 0.04;
-
-
-    /* ---------------------------------------------
-       MODEL
-    --------------------------------------------- */
+    targetX += (mouseX - targetX) * 0.04;
+    targetY += (mouseY - targetY) * 0.04;
 
     if (model) {
 
-        /*
-            Slow continuous rotation.
+        const cursorRotationY = targetX * 0.35;
+        const cursorRotationX = targetY * 0.20;
 
-            This makes the stand slowly rotate even
-            when the user isn't doing anything.
-        */
+        // Keep the model upright
+        model.rotation.z = -Math.PI / 2;
 
-        const baseRotation =
-            elapsed * 0.15;
+        // Subtle cursor interaction
+        model.rotation.y = cursorRotationY;
+        model.rotation.x = -0.15 + cursorRotationX;
 
-
-        /*
-            Cursor influence.
-
-            Move the mouse left/right → rotate around Y
-            Move the mouse up/down → tilt around X
-        */
-
-        const cursorRotationY =
-            targetX * 0.45;
-
-        const cursorRotationX =
-            targetY * 0.25;
-
-
-        /*
-            Combine everything.
-
-            Offset = initial orientation
-            Base = automatic rotation
-            Cursor = interactive rotation
-        */
-
-        model.rotation.y =
-            modelRotationOffset +
-            baseRotation +
-            cursorRotationY;
-
-
-        model.rotation.x =
-            -0.15 +
-            cursorRotationX;
-
-
-        /*
-            Gentle floating movement
-        */
-
+        // Gentle floating
         model.position.y =
             Math.sin(elapsed * 1.2) * 0.08;
-
     }
 
-
-    /* ---------------------------------------------
-       Render
-    --------------------------------------------- */
-
-    renderer.render(
-        scene,
-        camera
-    );
-
+    renderer.render(scene, camera);
 }
 
 
