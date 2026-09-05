@@ -258,69 +258,37 @@ function animate() {
 
     requestAnimationFrame(animate);
 
+    const elapsed = clock.getElapsedTime();
 
-    const elapsed =
-        clock.getElapsedTime();
-
-
-    /* ---------------------------------------------
-       Smooth cursor movement
-    --------------------------------------------- */
-
-    targetX +=
-        (mouseX - targetX) * 0.04;
-
-
-    targetY +=
-        (mouseY - targetY) * 0.04;
-
+    targetX += (mouseX - targetX) * 0.04;
+    targetY += (mouseY - targetY) * 0.04;
 
     if (model) {
 
-        /* -----------------------------------------
-           Automatic movement
-        ----------------------------------------- */
+        // Gentle continuous rotation
+        const baseRotation =
+            elapsed * 0.15;
 
-        model.rotation.y += 0.002;
+        // Cursor influence
+        const cursorY =
+            targetX * 0.45;
 
+        const cursorX =
+            targetY * 0.25;
 
-        /* -----------------------------------------
-           Cursor interaction
-        ----------------------------------------- */
-
-        const cursorRotationY =
-            targetX * 0.6;
-
-
-        const cursorRotationX =
-            targetY * 0.3;
-
-
-        model.rotation.y +=
-            (cursorRotationY -
-             (model.rotation.y % (Math.PI * 2))) * 0.002;
-
+        model.rotation.y =
+            baseRotation + cursorY;
 
         model.rotation.x =
-            -0.15 + cursorRotationX;
+            -0.15 + cursorX;
 
-
-        /* -----------------------------------------
-           Floating
-        ----------------------------------------- */
-
+        // Gentle floating
         model.position.y =
             Math.sin(elapsed * 1.2) * 0.08;
-
     }
 
-
-    renderer.render(
-        scene,
-        camera
-    );
+    renderer.render(scene, camera);
 }
-
 
 animate();
 
