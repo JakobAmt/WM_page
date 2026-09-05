@@ -8,9 +8,7 @@ import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 const container = document.getElementById("three-container");
 
-
 const scene = new THREE.Scene();
-
 
 const camera = new THREE.PerspectiveCamera(
     35,
@@ -18,7 +16,6 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     100
 );
-
 
 camera.position.set(0, 0, 5);
 
@@ -32,20 +29,16 @@ const renderer = new THREE.WebGLRenderer({
     alpha: true
 });
 
-
 renderer.setPixelRatio(
     Math.min(window.devicePixelRatio, 2)
 );
-
 
 renderer.setSize(
     container.clientWidth,
     container.clientHeight
 );
 
-
 renderer.shadowMap.enabled = true;
-
 
 container.appendChild(renderer.domElement);
 
@@ -67,11 +60,7 @@ const keyLight = new THREE.DirectionalLight(
     4
 );
 
-keyLight.position.set(
-    3,
-    4,
-    5
-);
+keyLight.position.set(3, 4, 5);
 
 scene.add(keyLight);
 
@@ -81,11 +70,7 @@ const fillLight = new THREE.DirectionalLight(
     2
 );
 
-fillLight.position.set(
-    -4,
-    1,
-    2
-);
+fillLight.position.set(-4, 1, 2);
 
 scene.add(fillLight);
 
@@ -96,17 +81,31 @@ scene.add(fillLight);
 
 const loader = new STLLoader();
 
-
 let model = null;
 
 
+/*
+    Change this number to change the starting
+    horizontal orientation of the watch stand.
+
+    Negative = counter-clockwise
+    Positive = clockwise
+*/
+
+const modelRotationOffset = -1.17;
+
+
 loader.load(
+
     "models/watchmate_model.stl",
 
     (geometry) => {
 
         geometry.computeVertexNormals();
 
+        /* ---------------------------------------------
+           MATERIAL
+        --------------------------------------------- */
 
         const material = new THREE.MeshStandardMaterial({
 
@@ -131,14 +130,11 @@ loader.load(
 
         geometry.computeBoundingBox();
 
-
         const box = geometry.boundingBox;
-
 
         const center = new THREE.Vector3();
 
         box.getCenter(center);
-
 
         geometry.translate(
             -center.x,
@@ -155,34 +151,37 @@ loader.load(
 
         box.getSize(size);
 
-
         const maxDimension = Math.max(
             size.x,
             size.y,
             size.z
         );
 
-
         const scale = 2.3 / maxDimension;
-
 
         model.scale.setScalar(scale);
 
 
         /* ---------------------------------------------
-           ROTATION
+           INITIAL ROTATION
         --------------------------------------------- */
 
         model.rotation.x = -0.15;
 
-        model.rotation.y = -0.8;
+        model.rotation.y = modelRotationOffset;
 
+
+        /* ---------------------------------------------
+           ADD MODEL
+        --------------------------------------------- */
 
         scene.add(model);
 
     },
 
+
     undefined,
+
 
     (error) => {
 
@@ -192,6 +191,7 @@ loader.load(
         );
 
     }
+
 );
 
 
@@ -206,39 +206,39 @@ let targetX = 0;
 let targetY = 0;
 
 
+/* Desktop */
+
 window.addEventListener(
     "mousemove",
     (event) => {
 
         mouseX =
-            (event.clientX / window.innerWidth - 0.5);
+            (event.clientX / window.innerWidth) - 0.5;
 
         mouseY =
-            (event.clientY / window.innerHeight - 0.5);
+            (event.clientY / window.innerHeight) - 0.5;
 
     }
 );
 
 
-/* =====================================================
-   TOUCH
-===================================================== */
+/* Mobile */
 
 window.addEventListener(
     "touchmove",
     (event) => {
 
-        if (!event.touches.length) return;
-
+        if (!event.touches.length) {
+            return;
+        }
 
         const touch = event.touches[0];
 
-
         mouseX =
-            (touch.clientX / window.innerWidth - 0.5);
+            (touch.clientX / window.innerWidth) - 0.5;
 
         mouseY =
-            (touch.clientY / window.innerHeight - 0.5);
+            (touch.clientY / window.innerHeight) - 0.5;
 
     },
     {
@@ -258,37 +258,93 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    const elapsed = clock.getElapsedTime();
 
-    targetX += (mouseX - targetX) * 0.04;
-    targetY += (mouseY - targetY) * 0.04;
+    const elapsed =
+        clock.getElapsedTime();
+
+
+    /* ---------------------------------------------
+       Smooth cursor movement
+    --------------------------------------------- */
+
+    targetX +=
+        (mouseX - targetX) * 0.04;
+
+    targetY +=
+        (mouseY - targetY) * 0.04;
+
+
+    /* ---------------------------------------------
+       MODEL
+    --------------------------------------------- */
 
     if (model) {
 
-        // Gentle continuous rotation
+        /*
+            Slow continuous rotation.
+
+            This makes the stand slowly rotate even
+            when the user isn't doing anything.
+        */
+
         const baseRotation =
             elapsed * 0.15;
 
-        // Cursor influence
-        const cursorY =
+
+        /*
+            Cursor influence.
+
+            Move the mouse left/right → rotate around Y
+            Move the mouse up/down → tilt around X
+        */
+
+        const cursorRotationY =
             targetX * 0.45;
 
-        const cursorX =
+        const cursorRotationX =
             targetY * 0.25;
 
+
+        /*
+            Combine everything.
+
+            Offset = initial orientation
+            Base = automatic rotation
+            Cursor = interactive rotation
+        */
+
         model.rotation.y =
-            baseRotation + cursorY;
+            modelRotationOffset +
+            baseRotation +
+            cursorRotationY;
+
 
         model.rotation.x =
-            -0.15 + cursorX;
+            -0.15 +
+            cursorRotationX;
 
-        // Gentle floating
+
+        /*
+            Gentle floating movement
+        */
+
         model.position.y =
             Math.sin(elapsed * 1.2) * 0.08;
+
     }
 
-    renderer.render(scene, camera);
+
+    /* ---------------------------------------------
+       Render
+    --------------------------------------------- */
+
+    renderer.render(
+        scene,
+        camera
+    );
+
 }
+
 
 animate();
 
@@ -302,14 +358,12 @@ function resize() {
     const width =
         container.clientWidth;
 
-
     const height =
         container.clientHeight;
 
 
     camera.aspect =
         width / height;
-
 
     camera.updateProjectionMatrix();
 
