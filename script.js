@@ -165,9 +165,9 @@ loader.load(
            INITIAL ROTATION
         --------------------------------------------- */
 
-        model.rotation.x = -Math.PI / 2;
+        model.rotation.x = 0;
 
-        model.rotation.z = Math.PI / 2;
+        model.rotation.z = 0;
 
         model.rotation.y = 0;
 
