@@ -1,6 +1,6 @@
-/* =====================================================
+/* =========================
    FONT
-===================================================== */
+========================= */
 
 @font-face {
     font-family: "Modak";
@@ -10,9 +10,9 @@
 }
 
 
-/* =====================================================
+/* =========================
    VARIABLES
-===================================================== */
+========================= */
 
 :root {
     --green: #2f6b3f;
@@ -21,9 +21,9 @@
 }
 
 
-/* =====================================================
+/* =========================
    RESET
-===================================================== */
+========================= */
 
 * {
     margin: 0;
@@ -31,212 +31,149 @@
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
 
-
 body {
     background: var(--green);
     color: var(--cream);
-
-    font-family: Arial, sans-serif;
-
+    font-family: Arial, Helvetica, sans-serif;
     overflow-x: hidden;
 }
 
+a {
+    color: inherit;
+    text-decoration: none;
+}
 
-/* =====================================================
+
+/* =========================
    NAVIGATION
-===================================================== */
+========================= */
 
 .navbar {
     position: fixed;
-
     top: 0;
     left: 0;
-
     width: 100%;
-    height: 75px;
-
-    padding: 0 40px;
+    height: 80px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    z-index: 100;
-}
+    padding: 0 5vw;
 
+    z-index: 1000;
+
+    background: var(--green);
+}
 
 .logo {
-    color: var(--cream);
-
     font-family: "Modak", sans-serif;
-
-    font-size: 28px;
-
-    text-decoration: none;
-
-    letter-spacing: 1px;
+    font-size: 1.7rem;
+    letter-spacing: 0.02em;
 }
-
 
 .nav-links {
     display: flex;
-
-    gap: 30px;
+    gap: 35px;
 }
-
 
 .nav-links a {
-    color: var(--cream);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
 
-    text-decoration: none;
-
-    font-size: 13px;
-    font-weight: bold;
-
-    transition: opacity 0.25s ease;
+    transition: opacity 0.2s ease;
 }
-
 
 .nav-links a:hover {
     opacity: 0.55;
 }
 
 
-/* =====================================================
+/* =========================
    HERO
-===================================================== */
+========================= */
 
 .hero {
     position: relative;
-
-    width: 100%;
     min-height: 100svh;
-
-    padding: 120px 8% 80px;
 
     display: flex;
     align-items: center;
 
+    padding: 100px 6vw 60px;
+
     overflow: hidden;
 }
 
-
 .hero-content {
     position: relative;
-
     z-index: 2;
 
     width: 50%;
-
-    pointer-events: none;
 }
-
-
-.hero-content a {
-    pointer-events: auto;
-}
-
-
-/* =====================================================
-   SMALL LABELS
-===================================================== */
 
 .eyebrow {
-    font-size: 12px;
-
-    letter-spacing: 2px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
 
     margin-bottom: 20px;
-
-    opacity: 0.7;
 }
 
-
-/* =====================================================
-   BIG TYPOGRAPHY
-===================================================== */
-
-h1,
-h2 {
+.hero h1 {
     font-family: "Modak", sans-serif;
-
+    font-size: clamp(5rem, 12vw, 11rem);
     font-weight: normal;
+    line-height: 0.78;
+    letter-spacing: -0.02em;
 
-    line-height: 0.85;
+    margin-bottom: 35px;
 }
-
-
-h1 {
-    font-size: clamp(90px, 15vw, 220px);
-
-    letter-spacing: -2px;
-}
-
-
-h2 {
-    font-size: clamp(60px, 10vw, 140px);
-
-    letter-spacing: -1px;
-}
-
-
-/* =====================================================
-   HERO TEXT
-===================================================== */
 
 .hero-text {
-    max-width: 320px;
+    max-width: 420px;
 
-    margin-top: 35px;
-
-    font-size: 18px;
-
+    font-size: 1.1rem;
     line-height: 1.5;
+
+    margin-bottom: 35px;
 }
-
-
-/* =====================================================
-   CONTACT BUTTON
-===================================================== */
 
 .contact-button {
     display: inline-block;
 
-    margin-top: 30px;
+    padding: 14px 25px;
 
-    padding: 15px 26px;
+    border: 2px solid var(--cream);
+    border-radius: 100px;
 
-    background: var(--cream);
-
-    color: var(--green);
-
-    border-radius: 50px;
-
-    text-decoration: none;
-
-    font-size: 14px;
-
-    font-weight: bold;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
 
     transition:
-        transform 0.3s ease,
-        opacity 0.3s ease;
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
 }
-
 
 .contact-button:hover {
-    transform: scale(1.06);
+    background: var(--cream);
+    color: var(--green);
+    transform: translateY(-2px);
 }
 
 
-/* =====================================================
-   THREE.JS
-===================================================== */
+/* =========================
+   THREE.JS MODEL
+========================= */
 
 #three-container {
     position: absolute;
@@ -252,211 +189,382 @@ h2 {
     pointer-events: none;
 }
 
-
 #three-container canvas {
     display: block;
-
-    width: 100% !important;
-    height: 100% !important;
+    width: 100%;
+    height: 100%;
 }
 
 
-/* =====================================================
-   SECTIONS
-===================================================== */
+/* =========================
+   GENERAL SECTIONS
+========================= */
 
-.section,
-.contact-section {
-    position: relative;
-
-    min-height: 90vh;
-
-    padding: 150px 10%;
+.section {
+    min-height: 90svh;
 
     display: flex;
-
     flex-direction: column;
-
     justify-content: center;
+
+    padding: 120px 8vw;
+
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
+.section h2,
+.contact-section h2 {
+    font-family: "Modak", sans-serif;
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: normal;
+    line-height: 0.85;
+
+    margin-bottom: 40px;
+}
 
 .section-text {
-    max-width: 550px;
+    max-width: 650px;
 
-    margin-top: 40px;
-
-    font-size: 20px;
-
-    line-height: 1.6;
+    font-size: 1.1rem;
+    line-height: 1.7;
 }
 
 
-/* =====================================================
+/* =========================
+   SCROLL REVEAL
+========================= */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(60px);
+
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================
    CONTACT
-===================================================== */
+========================= */
 
 .contact-section {
-    min-height: 80vh;
-}
+    min-height: 80svh;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 120px 8vw;
+
+    max-width: 1400px;
+    margin: 0 auto;
+}
 
 .contact-email {
-    display: inline-block;
+    font-size: clamp(1.2rem, 3vw, 2rem);
 
-    margin-top: 40px;
+    border-bottom: 2px solid var(--cream);
 
-    color: var(--cream);
+    padding-bottom: 5px;
 
-    font-size: clamp(25px, 5vw, 60px);
+    width: fit-content;
 
-    font-weight: bold;
-
-    text-decoration: none;
-
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
 }
-
 
 .contact-email:hover {
     opacity: 0.6;
 }
 
 
-/* =====================================================
-   SCROLL REVEAL
-===================================================== */
-
-.reveal {
-    opacity: 0;
-
-    transform: translateY(60px);
-
-    transition:
-        opacity 0.9s ease,
-        transform 0.9s ease;
-}
-
-
-.reveal.visible {
-    opacity: 1;
-
-    transform: translateY(0);
-}
-
-
-/* =====================================================
+/* =========================
    FOOTER
-===================================================== */
+========================= */
 
 footer {
-    padding: 30px 40px;
-
     display: flex;
-
     justify-content: space-between;
 
-    font-size: 12px;
+    padding: 35px 5vw;
 
-    opacity: 0.6;
+    border-top: 1px solid rgba(244, 240, 223, 0.25);
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
 }
 
 
-/* =====================================================
+/* ==================================================
+   DISCLAIMER PAGE
+   Deliberately independent from the playful styling
+================================================== */
+
+.disclaimer-page {
+    padding-top: 80px;
+
+    color: var(--cream);
+
+    /* Professional font */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* Header */
+
+.disclaimer-header {
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    padding: 100px 6vw 70px;
+
+    border-bottom: 1px solid rgba(244, 240, 223, 0.3);
+}
+
+.disclaimer-header h1 {
+    /* IMPORTANT:
+       Overrides the global Modak h1 styling */
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+
+    font-weight: 600;
+
+    line-height: 1.1;
+
+    letter-spacing: normal;
+
+    margin: 0 0 20px;
+}
+
+.disclaimer-header p {
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    font-size: 1rem;
+
+    line-height: 1.6;
+
+    opacity: 0.8;
+
+    margin: 0;
+}
+
+
+/* Content */
+
+.disclaimer-content {
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    padding: 0 6vw 120px;
+}
+
+.disclaimer-block {
+    padding: 45px 0;
+
+    border-bottom: 1px solid rgba(244, 240, 223, 0.2);
+}
+
+.disclaimer-block h2 {
+    /* IMPORTANT:
+       Overrides the global Modak h2 styling */
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    font-size: 1.25rem;
+
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    letter-spacing: normal;
+
+    margin: 0 0 18px;
+}
+
+.disclaimer-block p {
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    max-width: 750px;
+
+    font-size: 0.95rem;
+
+    line-height: 1.7;
+
+    opacity: 0.85;
+
+    margin: 0 0 14px;
+}
+
+.disclaimer-block p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Final statement */
+
+.disclaimer-block.final-note {
+    border-bottom: none;
+
+    padding-top: 50px;
+}
+
+.disclaimer-block.final-note p {
+    font-weight: 600;
+
+    opacity: 1;
+}
+
+
+/* =========================
    MOBILE
-===================================================== */
+========================= */
 
 @media (max-width: 700px) {
 
+    /* Navigation */
+
     .navbar {
-        height: 65px;
+        height: 70px;
 
-        padding: 0 20px;
+        padding: 0 6vw;
     }
-
 
     .logo {
-        font-size: 23px;
+        font-size: 1.4rem;
     }
-
 
     .nav-links {
         gap: 15px;
     }
 
-
     .nav-links a {
-        font-size: 11px;
+        font-size: 0.65rem;
     }
 
 
-    /* HERO */
+    /* Hero */
 
     .hero {
         min-height: 100svh;
 
-        padding: 100px 25px 50px;
+        display: block;
 
-        align-items: center;
+        padding: 120px 7vw 60px;
     }
-
 
     .hero-content {
         width: 100%;
-
-        align-self: flex-start;
-
-        padding-top: 80px;
     }
 
-
-    h1 {
-        font-size: clamp(85px, 25vw, 150px);
+    .hero h1 {
+        font-size: clamp(4.5rem, 20vw, 7rem);
     }
-
 
     .hero-text {
-        max-width: 240px;
-
-        font-size: 16px;
+        font-size: 1rem;
     }
-
-
-    /* THREE.JS */
 
     #three-container {
         width: 100%;
-        height: 65%;
+        height: 55%;
 
-        top: 30%;
-        right: -5%;
+        top: 45%;
+        right: 0;
     }
 
 
-    /* SECTIONS */
+    /* Sections */
 
-    .section,
-    .contact-section {
+    .section {
         min-height: 90svh;
 
-        padding: 120px 25px;
+        padding: 100px 7vw;
     }
 
-
-    h2 {
-        font-size: clamp(55px, 16vw, 100px);
+    .section h2,
+    .contact-section h2 {
+        font-size: clamp(3.5rem, 16vw, 6rem);
     }
-
 
     .section-text {
-        font-size: 17px;
+        font-size: 1rem;
     }
 
 
-    /* FOOTER */
+    /* Contact */
+
+    .contact-section {
+        min-height: 80svh;
+
+        padding: 100px 7vw;
+    }
+
+
+    /* Footer */
 
     footer {
-        padding: 25px;
+        padding: 30px 7vw;
+
+        font-size: 0.65rem;
     }
 
+
+    /* Disclaimer */
+
+    .disclaimer-page {
+        padding-top: 70px;
+
+        font-family: Arial, Helvetica, sans-serif !important;
+    }
+
+    .disclaimer-header {
+        padding: 70px 7vw 50px;
+    }
+
+    .disclaimer-header h1 {
+        font-family: Arial, Helvetica, sans-serif !important;
+
+        font-size: 2.5rem;
+
+        font-weight: 600;
+    }
+
+    .disclaimer-header p {
+        font-family: Arial, Helvetica, sans-serif !important;
+
+        font-size: 0.9rem;
+    }
+
+    .disclaimer-content {
+        padding: 0 7vw 80px;
+    }
+
+    .disclaimer-block {
+        padding: 35px 0;
+    }
+
+    .disclaimer-block h2 {
+        font-family: Arial, Helvetica, sans-serif !important;
+
+        font-size: 1.15rem;
+
+        font-weight: 600;
+    }
+
+    .disclaimer-block p {
+        font-family: Arial, Helvetica, sans-serif !important;
+
+        font-size: 0.9rem;
+
+        line-height: 1.7;
+    }
 }
