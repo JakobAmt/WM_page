@@ -578,37 +578,26 @@ if (matesTrack) {
     );
 
     function updateMatesCarousel() {
-        const maxScroll =
-            matesTrack.scrollWidth - matesTrack.clientWidth;
+    const gap = parseFloat(getComputedStyle(matesTrack).gap) || 0;
+    const step = cards[0].offsetWidth + gap;
 
-        const progress = maxScroll > 0
-            ? matesTrack.scrollLeft / maxScroll
-            : 0;
+    // How many cards fit on screen (2 on desktop)
+    const perView = Math.max(1, Math.round(
+        (matesTrack.clientWidth + gap) / step
+    ));
 
-        const activeIndex = cards.reduce((closest, card, index) => {
-            const currentDistance = Math.abs(
-                card.offsetLeft -
-                matesTrack.offsetLeft -
-                matesTrack.scrollLeft
-            );
+    const firstVisible = Math.min(
+        Math.round(matesTrack.scrollLeft / step),
+        cards.length - perView
+    );
+    const lastVisible = firstVisible + perView;
 
-            const closestDistance = Math.abs(
-                cards[closest].offsetLeft -
-                matesTrack.offsetLeft -
-                matesTrack.scrollLeft
-            );
+    counter.textContent =
+        `${String(lastVisible).padStart(2, "0")} / ` +
+        `${String(cards.length).padStart(2, "0")}`;
 
-            return currentDistance < closestDistance
-                ? index
-                : closest;
-        }, 0);
-
-        counter.textContent =
-            `${String(activeIndex + 1).padStart(2, "0")} / ` +
-            `${String(cards.length).padStart(2, "0")}`;
-
-        progressBar.style.width =
-            `${((activeIndex + 1) / cards.length) * 100}%`;
+    progressBar.style.width =
+        `${(lastVisible / cards.length) * 100}%`;
     }
 
     function moveMates(direction) {
@@ -620,10 +609,21 @@ if (matesTrack) {
             getComputedStyle(matesTrack).gap
         ) || 0;
 
-        matesTrack.scrollBy({
-            left: direction * (card.offsetWidth + gap),
-            behavior: "smooth"
-        });
+        const step = card.offsetWidth + gap;
+        const maxScroll = matesTrack.scrollWidth - matesTrack.clientWidth;
+        const atStart = matesTrack.scrollLeft <= 1;
+        const atEnd = matesTrack.scrollLeft >= maxScroll - 1;
+
+        if (direction < 0 && atStart) {
+            matesTrack.scrollTo({ left: maxScroll, behavior: "smooth" });
+        } else if (direction > 0 && atEnd) {
+            matesTrack.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+            matesTrack.scrollBy({
+                left: direction * step,
+                behavior: "smooth"
+            });
+        }
     }
 
     previousButton.addEventListener("click", () => {
