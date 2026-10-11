@@ -559,3 +559,88 @@ revealElements.forEach(
 
     }
 );
+
+
+/* =========================
+   MEET THE MATES CAROUSEL
+========================= */
+
+const matesTrack = document.getElementById("mates-track");
+
+if (matesTrack) {
+    const previousButton = document.querySelector(".mates-prev");
+    const nextButton = document.querySelector(".mates-next");
+    const counter = document.getElementById("mates-counter");
+    const progressBar = document.getElementById("mates-progress-bar");
+
+    const cards = Array.from(
+        matesTrack.querySelectorAll(".mate-card")
+    );
+
+    function updateMatesCarousel() {
+        const maxScroll =
+            matesTrack.scrollWidth - matesTrack.clientWidth;
+
+        const progress = maxScroll > 0
+            ? matesTrack.scrollLeft / maxScroll
+            : 0;
+
+        const activeIndex = cards.reduce((closest, card, index) => {
+            const currentDistance = Math.abs(
+                card.offsetLeft -
+                matesTrack.offsetLeft -
+                matesTrack.scrollLeft
+            );
+
+            const closestDistance = Math.abs(
+                cards[closest].offsetLeft -
+                matesTrack.offsetLeft -
+                matesTrack.scrollLeft
+            );
+
+            return currentDistance < closestDistance
+                ? index
+                : closest;
+        }, 0);
+
+        counter.textContent =
+            `${String(activeIndex + 1).padStart(2, "0")} / ` +
+            `${String(cards.length).padStart(2, "0")}`;
+
+        progressBar.style.width =
+            `${((activeIndex + 1) / cards.length) * 100}%`;
+    }
+
+    function moveMates(direction) {
+        const card = cards[0];
+
+        if (!card) return;
+
+        const gap = parseFloat(
+            getComputedStyle(matesTrack).gap
+        ) || 0;
+
+        matesTrack.scrollBy({
+            left: direction * (card.offsetWidth + gap),
+            behavior: "smooth"
+        });
+    }
+
+    previousButton.addEventListener("click", () => {
+        moveMates(-1);
+    });
+
+    nextButton.addEventListener("click", () => {
+        moveMates(1);
+    });
+
+    matesTrack.addEventListener(
+        "scroll",
+        updateMatesCarousel,
+        { passive: true }
+    );
+
+    window.addEventListener("resize", updateMatesCarousel);
+
+    updateMatesCarousel();
+}
